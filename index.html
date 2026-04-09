@@ -1912,3 +1912,407 @@
             color: var(--primary);
             text-transform: uppercase;
             lett
+                    <input type="text" class="form-input" id="playerName" placeholder="John Doe">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Team</label>
+                        <select class="form-select" id="playerTeam"></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Position</label>
+                        <select class="form-select" id="playerPosition">
+                            <option value="GK">Goalkeeper</option>
+                            <option value="DEF">Defender</option>
+                            <option value="MID">Midfielder</option>
+                            <option value="FWD">Forward</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Shirt Number</label>
+                        <input type="number" class="form-input" id="playerNumber" min="1" max="99">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Age</label>
+                        <input type="number" class="form-input" id="playerAge" min="15" max="50">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="addPlayer()">Register Player</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add News Modal -->
+    <div class="modal-overlay" id="addNewsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Publish News Article</div>
+                <button class="modal-close" onclick="hideModal('addNewsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Headline</label>
+                    <input type="text" class="form-input" id="newsTitle" placeholder="Match Report: Lamu Queens vs...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Content</label>
+                    <textarea class="form-textarea" id="newsContent" placeholder="Write your news article here..."></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="addNews()">Publish News</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">My Profile</div>
+                <button class="modal-close" onclick="hideModal('profileModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-2">
+                    <div style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 3rem;">
+                        👤
+                    </div>
+                    <h3 id="profileName">Guest User</h3>
+                    <p class="text-gray" id="profileRole">Fan</p>
+                </div>
+                
+                <div class="card mb-1">
+                    <div class="card-body">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray">Matches Joined</span>
+                            <span class="font-bold text-primary" id="profileMatches">0</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray">Predictions Made</span>
+                            <span class="font-bold text-primary" id="profilePredictions">0</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray">Account Type</span>
+                            <span class="font-bold" id="profileType">Guest</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary mb-1" onclick="showSettings()">⚙️ Settings</button>
+                <button class="btn btn-danger" onclick="logout()" id="logoutBtn">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- More Menu Modal -->
+    <div class="modal-overlay" id="moreModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">More Options</div>
+                <button class="modal-close" onclick="hideModal('moreModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="admin-grid">
+                    <div class="admin-card" onclick="navigate('news'); hideModal('moreModal')">
+                        <div class="admin-icon">📰</div>
+                        <div class="admin-label">News</div>
+                    </div>
+                    <div class="admin-card" onclick="navigate('players'); hideModal('moreModal')">
+                        <div class="admin-icon">⭐</div>
+                        <div class="admin-label">Players</div>
+                    </div>
+                    <div class="admin-card" onclick="showStats(); hideModal('moreModal')">
+                        <div class="admin-icon">📈</div>
+                        <div class="admin-label">Stats</div>
+                    </div>
+                    <div class="admin-card" onclick="showHistory(); hideModal('moreModal')">
+                        <div class="admin-icon">📜</div>
+                        <div class="admin-label">History</div>
+                    </div>
+                    <div class="admin-card" onclick="showAbout(); hideModal('moreModal')">
+                        <div class="admin-icon">ℹ️</div>
+                        <div class="admin-label">About</div>
+                    </div>
+                    <div class="admin-card" onclick="showSuggestions(); hideModal('moreModal')">
+                        <div class="admin-icon">💬</div>
+                        <div class="admin-label">Suggestions</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="modal-overlay" id="searchModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Search</div>
+                <button class="modal-close" onclick="hideModal('searchModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" class="form-input" id="searchInput" placeholder="Search teams, players, news..." oninput="performSearch()">
+                </div>
+                <div id="searchResults">
+                    <div class="empty-state">
+                        <div class="empty-icon">🔍</div>
+                        <div class="empty-title">Start Searching</div>
+                        <div class="empty-text">Type to search teams, players, and news</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications Modal -->
+    <div class="modal-overlay" id="notificationsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Notifications</div>
+                <button class="modal-close" onclick="hideModal('notificationsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="notificationsList">
+                    <div class="empty-state">
+                        <div class="empty-icon">🔔</div>
+                        <div class="empty-title">No Notifications</div>
+                        <div class="empty-text">You're all caught up!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div class="modal-overlay" id="aboutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">About Lamu Sports Hub</div>
+                <button class="modal-close" onclick="hideModal('aboutModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-2">
+                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border-radius: 20px; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
+                        ⚽
+                    </div>
+                    <h3>Lamu Sports Hub</h3>
+                    <p class="text-gray">Version 2.0</p>
+                </div>
+
+                <div class="card mb-1">
+                    <div class="card-body">
+                        <p class="text-sm mb-1">The digital home of football in Lamu County, Kenya. Connecting players, teams, coaches, fans, and officials in one platform.</p>
+                        <p class="text-sm text-gray">Developed by Lamu Youth Alliance</p>
+                    </div>
+                </div>
+
+                <div class="card mb-1">
+                    <div class="card-header">
+                        <div class="card-title">📞 Contact</div>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-sm mb-1">WhatsApp: <strong>0705434375</strong></p>
+                        <p class="text-sm">Radio Lamu FM: <strong>91.1 MHz</strong></p>
+                        <p class="text-sm text-gray">info@lamuyouthalliance.org</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">🔒 App Safety</div>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-sm text-gray">Your data is stored locally on your device. PIN accounts are not synced across devices. Official access is protected by a secret code.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Suggestions Modal -->
+    <div class="modal-overlay" id="suggestionsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Send Suggestion</div>
+                <button class="modal-close" onclick="hideModal('suggestionsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Your Name</label>
+                    <input type="text" class="form-input" id="suggestionName" placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-select" id="suggestionCategory">
+                        <option value="feedback">General Feedback</option>
+                        <option value="bug">Report Bug</option>
+                        <option value="feature">Feature Request</option>
+                        <option value="correction">Data Correction</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Your Message</label>
+                    <textarea class="form-textarea" id="suggestionMessage" placeholder="Tell us what you think..."></textarea>
+                </div>
+                <button class="btn btn-primary" onclick="submitSuggestion()">Send Suggestion</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // LAMU SPORTS HUB - COMPLETE APPLICATION
+        // ==========================================
+
+        // Data Store
+        const DataStore = {
+            teams: [
+                { id: 1, name: 'Lamu Queens', abbr: 'LQ', logo: '🦁', venue: 'Kibaki Grounds', founded: 2015, stats: { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 } },
+                { id: 2, name: '11 Brothers', abbr: '11B', logo: '👥', venue: 'Mkunumbi Stadium', founded: 2010, stats: { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 } },
+                { id: 3, name: 'Blue Rangers', abbr: 'BR', logo: '🔵', venue: 'Hindi Grounds', founded: 2012, stats: { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 } },
+                { id: 4, name: 'Mokowe FC', abbr: 'MFC', logo: '⚓', venue: 'Mokowe Stadium', founded: 2008, stats: { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 } },
+                { id: 5, name: 'Witu Warriors', abbr: 'WW', logo: '⚔️', venue: 'Witu Grounds', founded: 2014, stats: { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 } }
+            ],
+            matches: [],
+            players: [
+                { id: 1, name: 'Ahmed Hassan', team: 1, position: 'FWD', number: 9, age: 24, goals: 12, assists: 5 },
+                { id: 2, name: 'Omar Juma', team: 2, position: 'MID', number: 10, age: 26, goals: 8, assists: 10 },
+                { id: 3, name: 'Yusuf Ibrahim', team: 3, position: 'DEF', number: 5, age: 22, goals: 2, assists: 3 },
+                { id: 4, name: 'Said Ali', team: 4, position: 'GK', number: 1, age: 28, goals: 0, assists: 0 },
+                { id: 5, name: 'Fatima Mohammed', team: 1, position: 'MID', number: 8, age: 21, goals: 6, assists: 8 },
+                { id: 6, name: 'Amina Yusuf', team: 5, position: 'FWD', number: 11, age: 23, goals: 15, assists: 4 }
+            ],
+            news: [
+                { id: 1, title: 'Lamu Queens Crowned Champions 2025', content: 'In a thrilling final match, Lamu Queens secured the championship title with a 3-1 victory over 11 Brothers. The match was attended by over 2,000 fans at Kibaki Grounds.', date: new Date().toISOString(), author: 'Official' },
+                { id: 2, title: 'New Season Fixtures Released', content: 'The FKF Lamu County League 2025/2026 season fixtures have been announced. Opening match kicks off on March 28th with Lamu Queens hosting 11 Brothers.', date: new Date(Date.now() - 86400000).toISOString(), author: 'Official' },
+                { id: 3, title: 'Player Transfer Window Opens', content: 'Teams can now register new players for the upcoming season. The transfer window will remain open until April 15th.', date: new Date(Date.now() - 172800000).toISOString(), author: 'Official' }
+            ],
+            notifications: [],
+            suggestions: [],
+            currentUser: null,
+            isAdmin: false,
+            pinInput: '',
+            userStats: { matchesJoined: 0, predictionsMade: 0 }
+        };
+
+        const ADMIN_PIN = '1234';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            renderAll();
+            checkLiveMatches();
+            setInterval(checkLiveMatches, 60000);
+            updateStreak();
+            setActiveNav();
+        });
+
+        // Persistence
+        function saveData() {
+            localStorage.setItem('lamu_sports_data', JSON.stringify({
+                teams: DataStore.teams,
+                matches: DataStore.matches,
+                players: DataStore.players,
+                news: DataStore.news,
+                notifications: DataStore.notifications,
+                suggestions: DataStore.suggestions,
+                userStats: DataStore.userStats
+            }));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('lamu_sports_data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                DataStore.teams = data.teams || DataStore.teams;
+                DataStore.matches = data.matches || [];
+                DataStore.players = data.players || DataStore.players;
+                DataStore.news = data.news || DataStore.news;
+                DataStore.notifications = data.notifications || [];
+                DataStore.suggestions = data.suggestions || [];
+                DataStore.userStats = data.userStats || { matchesJoined: 0, predictionsMade: 0 };
+            }
+        }
+
+        // Navigation
+        function navigate(section) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            const navMap = { home: 0, standings: 1, teams: 2, matches: 3 };
+            if (navMap[section] !== undefined) {
+                document.querySelectorAll('.nav-item')[navMap[section]].classList.add('active');
+            }
+            
+            window.scrollTo(0, 0);
+            renderAll();
+        }
+
+        function setActiveNav() {
+            const sections = ['home', 'standings', 'teams', 'matches'];
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const index = sections.indexOf(entry.target.id);
+                        if (index !== -1) {
+                            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                            document.querySelectorAll('.nav-item')[index].classList.add('active');
+                        }
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) observer.observe(el);
+            });
+        }
+
+        // Rendering
+        function renderAll() {
+            renderTeams();
+            renderMatches();
+            renderStandings();
+            renderPlayers();
+            renderNews();
+            renderActivity();
+            renderUpcoming();
+            updateStats();
+            populateSelects();
+        }
+
+        function renderTeams() {
+            const container = document.getElementById('teamsList');
+            if (!container) return;
+            
+            container.innerHTML = DataStore.teams.map(team => `
+                <div class="team-item" onclick="showTeamDetail(${team.id})">
+                    <div class="team-item-logo">${team.logo}</div>
+                    <div class="team-item-info">
+                        <div class="team-item-name">${team.name}</div>
+                        <div class="team-item-meta">${team.venue} • Founded ${team.founded}</div>
+                    </div>
+                    <div class="team-item-stats">
+                        <div class="team-item-points">${team.stats.pts}</div>
+                        <div class="team-item-label">points</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderMatches(filter = 'all') {
+            const container = document.getElementById('matchesList');
+            if (!container) return;
+            
+            let matches = DataStore.matches;
+            if (filter !== 'all') {
+                matches = matches.filter(m => m.status === filter);
+            }
+            
+            matches.sort((a, b) => new Date(b.date + 'T' + b.time) - new Date(a.date + 'T' + a.time));
+            
+            if (matches.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon"
