@@ -169,3 +169,296 @@ function addPlayer() {
 
 </body>
                         </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lamu Sports Hub</title>
+
+<style>
+:root {
+    --primary:#FF6B00;
+    --dark:#0f172a;
+    --card:#1e293b;
+    --text:#f8fafc;
+    --danger:#ef4444;
+}
+
+body {
+    margin:0;
+    font-family:Arial;
+    background:var(--dark);
+    color:var(--text);
+}
+
+.header {
+    padding:15px;
+    background:#020617;
+    font-weight:bold;
+}
+
+.container { padding:15px; }
+
+.card {
+    background:var(--card);
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:10px;
+}
+
+.btn {
+    background:var(--primary);
+    border:none;
+    padding:10px;
+    border-radius:8px;
+    color:white;
+    cursor:pointer;
+    width:100%;
+    margin-top:10px;
+}
+
+input, select, textarea {
+    width:100%;
+    padding:10px;
+    margin:5px 0;
+    border-radius:8px;
+    border:none;
+}
+
+.live {
+    color:var(--danger);
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">⚽ Lamu Sports Hub</div>
+
+<div class="container">
+
+<!-- ADD PLAYER -->
+<div class="card">
+<h3>Add Player</h3>
+<input id="name" placeholder="Player Name">
+<select id="team"></select>
+<button class="btn" onclick="addPlayer()">Add Player</button>
+</div>
+
+<!-- ADD MATCH -->
+<div class="card">
+<h3>Create Match</h3>
+<select id="home"></select>
+<select id="away"></select>
+<button class="btn" onclick="createMatch()">Create Match</button>
+</div>
+
+<!-- ADD NEWS -->
+<div class="card">
+<h3>Post News</h3>
+<input id="newsTitle" placeholder="Title">
+<textarea id="newsContent" placeholder="Content"></textarea>
+<button class="btn" onclick="addNews()">Publish</button>
+</div>
+
+<!-- MATCHES -->
+<div class="card">
+<h3>Matches</h3>
+<div id="matchesList"></div>
+</div>
+
+<!-- PLAYERS -->
+<div class="card">
+<h3>Players</h3>
+<div id="playersList"></div>
+</div>
+
+<!-- NEWS -->
+<div class="card">
+<h3>News</h3>
+<div id="newsList"></div>
+</div>
+
+</div>
+
+<script>
+
+/* ================= DATA ================= */
+let DataStore = {
+teams:[
+{id:1,name:'Lamu Queens'},
+{id:2,name:'11 Brothers'},
+{id:3,name:'Blue Rangers'}
+],
+players:[],
+matches:[],
+news:[]
+};
+
+/* ================= INIT ================= */
+document.addEventListener("DOMContentLoaded",()=>{
+load();
+renderAll();
+setInterval(updateLiveMatches,5000);
+});
+
+/* ================= STORAGE ================= */
+function save(){
+localStorage.setItem("lsh",JSON.stringify(DataStore));
+}
+
+function load(){
+const data = localStorage.getItem("lsh");
+if(data) DataStore = JSON.parse(data);
+}
+
+/* ================= RENDER ================= */
+function renderAll(){
+renderPlayers();
+renderMatches();
+renderNews();
+populateTeams();
+}
+
+function renderPlayers(){
+const el=document.getElementById("playersList");
+
+if(DataStore.players.length===0){
+el.innerHTML="No players";
+return;
+}
+
+el.innerHTML=DataStore.players.map(p=>`
+<div class="card">${p.name} (${getTeam(p.team)})</div>
+`).join('');
+}
+
+function renderMatches(){
+const el=document.getElementById("matchesList");
+
+if(DataStore.matches.length===0){
+el.innerHTML="No matches";
+return;
+}
+
+el.innerHTML=DataStore.matches.map(m=>`
+<div class="card">
+${getTeam(m.home)} vs ${getTeam(m.away)}<br>
+<span class="${m.live?'live':''}">
+${m.homeScore} - ${m.awayScore}
+${m.live?'🔴 LIVE':''}
+</span>
+<br>
+<button class="btn" onclick="startMatch(${m.id})">Start</button>
+</div>
+`).join('');
+}
+
+function renderNews(){
+const el=document.getElementById("newsList");
+
+if(DataStore.news.length===0){
+el.innerHTML="No news";
+return;
+}
+
+el.innerHTML=DataStore.news.map(n=>`
+<div class="card">
+<h4>${n.title}</h4>
+<p>${n.content}</p>
+</div>
+`).join('');
+}
+
+/* ================= HELPERS ================= */
+function getTeam(id){
+const t=DataStore.teams.find(t=>t.id==id);
+return t?t.name:"?";
+}
+
+function populateTeams(){
+const selects=["team","home","away"];
+
+selects.forEach(id=>{
+const el=document.getElementById(id);
+if(!el) return;
+
+el.innerHTML=DataStore.teams.map(t=>
+`<option value="${t.id}">${t.name}</option>`
+).join('');
+});
+}
+
+/* ================= ACTIONS ================= */
+function addPlayer(){
+const name=document.getElementById("name").value;
+const team=document.getElementById("team").value;
+
+if(!name) return alert("Enter name");
+
+DataStore.players.push({
+id:Date.now(),
+name,team
+});
+
+save();
+renderPlayers();
+}
+
+function createMatch(){
+const home=document.getElementById("home").value;
+const away=document.getElementById("away").value;
+
+if(home===away) return alert("Same team");
+
+DataStore.matches.push({
+id:Date.now(),
+home,away,
+homeScore:0,
+awayScore:0,
+live:false
+});
+
+save();
+renderMatches();
+}
+
+function startMatch(id){
+const m=DataStore.matches.find(m=>m.id===id);
+m.live=true;
+save();
+renderMatches();
+}
+
+function updateLiveMatches(){
+DataStore.matches.forEach(m=>{
+if(m.live){
+if(Math.random()>0.7) m.homeScore++;
+if(Math.random()>0.7) m.awayScore++;
+}
+});
+save();
+renderMatches();
+}
+
+function addNews(){
+const title=document.getElementById("newsTitle").value;
+const content=document.getElementById("newsContent").value;
+
+if(!title||!content) return alert("Fill all");
+
+DataStore.news.unshift({
+id:Date.now(),
+title,content
+});
+
+save();
+renderNews();
+}
+
+</script>
+
+</body>
+</html>
