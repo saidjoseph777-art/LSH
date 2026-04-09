@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lamu Sports Hub</title>
+
+<style>
+:root {
+    --primary: #FF6B00;
+    --dark: #0f172a;
+    --card: #1e293b;
+    --text: #f8fafc;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--dark);
+    color: var(--text);
+}
+
+.header {
+    padding: 15px;
+    background: #020617;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.container {
+    padding: 15px;
+}
+
+.card {
+    background: var(--card);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+
+.btn {
+    background: var(--primary);
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">⚽ Lamu Sports Hub</div>
+
+<div class="container">
+
+    <!-- ADD PLAYER -->
+    <div class="card">
+        <h3>Add Player</h3>
+        <input id="name" placeholder="Player Name">
+        <select id="team"></select>
+        <button class="btn" onclick="addPlayer()">Add Player</button>
+    </div>
+
+    <!-- TEAMS -->
+    <div class="card">
+        <h3>Teams</h3>
+        <div id="teamsList"></div>
+    </div>
+
+    <!-- PLAYERS -->
+    <div class="card">
+        <h3>Players</h3>
+        <div id="playersList"></div>
+    </div>
+
+</div>
+
+<script>
+
+/* ================= DATA ================= */
+const DataStore = {
+    teams: [
+        { id: 1, name: 'Lamu Queens' },
+        { id: 2, name: '11 Brothers' },
+        { id: 3, name: 'Blue Rangers' }
+    ],
+    players: []
+};
+
+/* ================= INIT ================= */
+document.addEventListener("DOMContentLoaded", () => {
+    renderTeams();
+    renderPlayers();
+    populateTeams();
+});
+
+/* ================= RENDER ================= */
+function renderTeams() {
+    const el = document.getElementById("teamsList");
+    el.innerHTML = DataStore.teams.map(t => `
+        <div class="card">${t.name}</div>
+    `).join('');
+}
+
+function renderPlayers() {
+    const el = document.getElementById("playersList");
+
+    if (DataStore.players.length === 0) {
+        el.innerHTML = "No players yet";
+        return;
+    }
+
+    el.innerHTML = DataStore.players.map(p => `
+        <div class="card">
+            ${p.name} - ${getTeamName(p.team)}
+        </div>
+    `).join('');
+}
+
+/* ================= HELPERS ================= */
+function getTeamName(id) {
+    const team = DataStore.teams.find(t => t.id == id);
+    return team ? team.name : "Unknown";
+}
+
+function populateTeams() {
+    const select = document.getElementById("team");
+
+    select.innerHTML = DataStore.teams.map(t =>
+        `<option value="${t.id}">${t.name}</option>`
+    ).join('');
+}
+
+/* ================= ACTIONS ================= */
+function addPlayer() {
+    const name = document.getElementById("name").value;
+    const team = document.getElementById("team").value;
+
+    if (!name) {
+        alert("Enter player name");
+        return;
+    }
+
+    DataStore.players.push({
+        id: Date.now(),
+        name,
+        team
+    });
+
+    document.getElementById("name").value = "";
+
+    renderPlayers();
+}
+
+</script>
+
+</body>
+                        </html>
